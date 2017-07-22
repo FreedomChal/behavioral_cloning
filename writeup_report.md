@@ -22,7 +22,7 @@ My model is nearly identical to the model I used in my [Traffic Sign Classificat
 
 #### Model parameter tuning
 
-The model has an adam optimizer, so the learning parameters did not need to be manually tuned. For the batch size, I set it to 64, which seems to work decently for my model. I set the number of epochs to 50. However, I had a checkpointer that saves the model at the end of every epoch. With the checkpointer, I was able to stop the training before it finished all 50 epochs. I often did cancel training early because most of my model's learning tended to stop around epoch 7.
+The model has an adam optimizer, so the learning parameters did not need to be manually tuned. For the batch size, I set it to 64, which seems to work well for my model. I set the number of epochs to 50. However, I had a checkpointer that saves the model at the end of every epoch. With the checkpointer, I was able to stop the training before it finished all 50 epochs. I often did cancel training early because most of my model's learning tended to stop around epoch 7.
 
 #### Appropriate training data
 
@@ -38,7 +38,7 @@ Later, I made a generator that takes in the recorded data, shuffles it, and outp
 
 #### Evolution of the code
 
-Pretty much universally, the main issue my model had was not steering sharply enough, particularly on tight turns, such as the corner right before the bridge, and the corner after the entrance to the dirt road.
+The main issue my model had was not steering sharply enough, particularly on tight turns, such as the corner right before the bridge, and the corner after the entrance to the dirt road.
 
 ![alt text][image4]
 
