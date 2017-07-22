@@ -2,7 +2,7 @@
 
 This is a project to clone the behavior of a human driver in a simulator.
 
-Here is a link to my [project code](https://github.com/FreedomChal/behavioral_cloning/blob/master/model.py)
+Here is my [project code](https://github.com/FreedomChal/behavioral_cloning/blob/master/model.py).
 
 ---
 
@@ -22,11 +22,11 @@ My model is nearly identical to the model I used in my [Traffic Sign Classificat
 
 #### Model parameter tuning
 
-The model has an adam optimizer, so the learning parameters did not need to be manually tuned. For the batch size, I set it to 64, which seems to work decently for my model. I set the number of epochs to 50, but almost always stopped training before the end of all 50.
+The model has an adam optimizer, so the learning parameters did not need to be manually tuned. For the batch size, I set it to 64, which seems to work decently for my model. I set the number of epochs to 50. However, I had a checkpointer that saves the model at the end of every epoch. With the checkpointer, I was able to stop the training before it finished all 50 epochs. I often did cancel training early because most of my model's learning tended to stop around epoch 7.
 
 #### Appropriate training data
 
-In the simulator, when recording the training data, I recorded two laps around the track, and some extra on the sharp turns.
+In the simulator, I recorded two laps around the track, and some extra on the sharp turns to remove my model's bias to go straight.
 
 ![alt text][image1]
 
@@ -34,17 +34,19 @@ In the simulator, when recording the training data, I recorded two laps around t
 
 ![alt text][image3]
 
-Later, I made a generator that takes in the recorded data, shuffles it, and outputs a formatted list of the normalized features (images), and the targets (steering angle). In the generator, half the images outputted are center images, one quarter left, and one quarter right. For the generator, and a couple other parts of the model, I got some ideas from, and used some helper code from [here](https://github.com/gardenermike/behavioral-cloning). One of the ideas is a tunable method of binning steering angles. The generator tunably returns data with higher steering angles more often. It generates a random number, and only uses the data if the steering angle to a power plus a leak value is greater than the random number.
+Later, I made a generator that takes in the recorded data, shuffles it, and outputs batches of normalized features (images), and targets (steering angle). In the generator, half the images output are center images, one quarter left camera images with an adjusted steering angle, and one quarter right camera images with an adjusted steering angle. For the generator, I got some ideas from, and used some helper code from [here](https://github.com/gardenermike/behavioral-cloning). One of the ideas is a tunable method of binning steering angles. The generator tunably returns data with higher steering angles more often. It generates a random number, and only uses the data if the steering angle to a power plus a leak value is greater than the random number.
 
 #### Evolution of the code
 
-Pretty much universally, the main issue my model had was not steering sharply enough, particularly on tight turns such as right before the bridge and a little after the entrance to the dirt road.
+Pretty much universally, the main issue my model had was not steering sharply enough, particularly on tight turns, such as the corner right before the bridge, and the corner after the entrance to the dirt road.
 
 ![alt text][image4]
 
 ![alt text][image5]
 
-I tried a lot of things to deal with this, modifying the binning hyperparameters, increasing the batch size, adding more layers and increasing the power of layers in the model, but what really made the difference was multiplying the steering angle by two in the generator. The doubled steering angle greatly increased the loss and caused the model to drive in somewhat wobbly manner, but overall it significantly improved the driving of my model.
+I tried a lot of things to deal with the small steering angles output by my model: modifying the binning hyperparameters, increasing the batch size, adding more layers, increasing the size of layers in the model. What really made the difference, though, was multiplying the steering angle by two in the generator. The doubled steering angle caused some odd effects, greatly increasing the loss and causing the model to drive in a somewhat wobbly manner, but overall it significantly improved the driving in the simulator, enough to consistently make it around the track safely.
+
+Here is the link to the video of my model driving in the simulator:
 
 [![video](https://img.youtube.com/vi/QSH3F_UFe_g/hqdefault.jpg)](https://youtu.be/QSH3F_UFe_g)
 
